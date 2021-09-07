@@ -19,6 +19,7 @@ open ItvDom
 let onestep_transfer : Node.t list -> Mem.t * Global.t -> Mem.t * Global.t
 =fun nodes (mem,global) ->
   list_fold (fun node (mem,global) ->
+    (* let _ = print_endline ("@@ In 'onestep_transfer'" ^ (Node.to_string node)) in *)
     ItvSem.run AbsSem.Weak ItvSem.Spec.empty node (mem,global)
   ) nodes (mem,global)
 

@@ -233,6 +233,7 @@ let rec prune_simple : update_mode -> Spec.t -> Global.t -> Proc.t -> exp -> Mem
   -> Mem.t
 = fun mode spec global pid cond mem ->
   match cond with
+    (* if (eval_const c == Val.0) then bot_mem else mem *)
   | BinOp (op, Lval x, e, t)
     when op = Lt || op = Gt || op = Le || op = Ge || op = Eq || op = Ne ->
     let x_lv = eval_lv ~spec pid x mem in
@@ -809,6 +810,8 @@ let bind_arg_lvars_set : update_mode -> Spec.t -> Global.t -> (Loc.t list) BatSe
 (* Default update option is weak update. *)
 let run : update_mode -> Spec.t -> Node.t -> Mem.t * Global.t -> Mem.t * Global.t
 = fun mode spec node (mem, global) ->
+  let _ = print_endline ("@@@ In run:") in
+  let _ = print_endline ("    node: " ^ (Node.to_string node)) in
   let pid = Node.get_pid node in
   match InterCfg.cmdof global.icfg node with
   | IntraCfg.Cmd.Cset (l, e, loc) ->
@@ -845,7 +848,12 @@ let run : update_mode -> Spec.t -> Node.t -> Mem.t * Global.t -> Mem.t * Global.
     (update mode spec global (eval_lv ~spec pid l mem) clos mem, global)
   | IntraCfg.Cmd.Cassume (e, _) ->
     let _ = eval ~spec pid e mem in (* for inspection *)
+    (* let v = eval ~spec pid e mem in (* for inspection *)
+    let _ = print_endline ("######: " ^ (Val.to_string v)) in *)
     (prune mode spec global pid e mem, global)
+    (* let v = eval ~spec pid e mem in
+    let i = Val.itv_of_val v in
+    if (i = Itv.zero) then (Mem.bot, global) else (prune mode spec global pid e mem, global) *)
   | IntraCfg.Cmd.Ccall (lvo, Cil.Lval (Cil.Var f, Cil.NoOffset), arg_exps, loc)
     when Global.is_undef f.vname global -> (* undefined library functions *)
     if BatSet.mem ((CilHelper.s_location loc)^":"^f.vname) spec.Spec.unsound_lib then (mem,global)

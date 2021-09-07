@@ -38,6 +38,12 @@ struct
     let nodes = InterCfg.nodesof global.icfg in
     let initial =
         list_fold (fun node ->
+          (* let _ = print_endline "where run 0" in
+          let t = Sem.accessof ~locset global node f mem in
+          let _ = print_endline "where run 1" in
+          let t1 = Access.add_node node t in
+          let _ = print_endline "where run 2" in
+          t1 *)
           Access.add_node node (Sem.accessof ~locset global node f mem)
        )  nodes Access.empty
     in
