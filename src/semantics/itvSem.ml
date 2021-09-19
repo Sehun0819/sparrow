@@ -394,7 +394,8 @@ let model_strlen mode spec pid (lvo, exps) (mem, global) =
   | (Some lv, str::_) ->
     let str_val = eval ~spec pid str mem in
     let null_pos = ArrayBlk.nullof (ItvDom.Val.array_of_val str_val) in
-    let v = Val.of_itv (Itv.meet Itv.nat null_pos) in
+    let offset = ArrayBlk.offsetof (ItvDom.Val.array_of_val str_val) in
+    let v = Val.of_itv (Itv.meet Itv.nat (Itv.minus null_pos offset)) in
     (update mode spec global (eval_lv ~spec pid lv mem) v mem, global)
   | _ -> (mem,global)
 
@@ -810,8 +811,8 @@ let bind_arg_lvars_set : update_mode -> Spec.t -> Global.t -> (Loc.t list) BatSe
 (* Default update option is weak update. *)
 let run : update_mode -> Spec.t -> Node.t -> Mem.t * Global.t -> Mem.t * Global.t
 = fun mode spec node (mem, global) ->
-  let _ = print_endline ("@@@ In run:") in
-  let _ = print_endline ("    node: " ^ (Node.to_string node)) in
+  (* let _ = print_endline ("@@@ In run:") in
+  let _ = print_endline ("    node: " ^ (Node.to_string node)) in *)
   let pid = Node.get_pid node in
   match InterCfg.cmdof global.icfg node with
   | IntraCfg.Cmd.Cset (l, e, loc) ->
