@@ -1,4 +1,3 @@
-// Both sparrow and infer raise a false alarm.
 #include<stdio.h>
 
 int main() {

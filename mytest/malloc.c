@@ -1,15 +1,19 @@
 #include<stdio.h>
-//#include<stdlib.h>
-void* malloc(int size);
+#include<stdlib.h>
+
+int* mymalloc(size) {
+    int* p = malloc(size);
+
+    if (p == NULL) {
+        return NULL;
+    }
+
+    return p;
+}
 
 int main() {
-    int* ptr = malloc(sizeof(int) * 10);
-    ptr[5] = 1000000;
-    int a[3] = {100,200,300};
-    //int casted = (int)ptr;
-    int b = a[val];
-    int c = a[b];
-    printf("result b: %d", b);
+    int* ptr = mymalloc(sizeof(int) * 10);
+    sparrow_print(ptr);
 
     return 0;
 }

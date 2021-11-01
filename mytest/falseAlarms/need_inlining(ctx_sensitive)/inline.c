@@ -27,9 +27,9 @@ int main () {
     struct struct2* s2;
 
     s1 = alloc(sizeof(*s1));
-    s2 = alloc(sizeof(*s1));
-    //sparrow_print(temp);
-    //sparrow_print(snew);
+    s2 = alloc(sizeof(*s2));
+    sparrow_print(s1);
+    sparrow_print(s2);
     s1->id = 100;
     s2->id = 200;
 
