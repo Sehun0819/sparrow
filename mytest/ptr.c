@@ -2,14 +2,19 @@
 #include<stdlib.h>
 
 int main() {
-    int a = 10;
-    int* p = &a;
+    int x = 10;
+    int y = 20;
+    int* p;
 
-    int v = *p;
-    sparrow_print(v);
-    a = 20;
-    v = *p;
-    sparrow_print(v);
+    int input;
+    scanf("%d", &input);
+
+    if (input) {
+        p = &x;
+    } else {
+        p = &y;
+    }
+
     sparrow_print(p);
 
     return 0;
